@@ -34,8 +34,9 @@ jobs:
     - name: Deploy blog
       run: |
         git clone "https://${{ secrets.GH_REF }}" deploy_git
-        mv ./deploy_git/.git ./public/
-        cd ./public
+        # mv ./deploy_git/.git ./public/
+        # cd ./public
+        mv ./deploy_git/.git .
         git config user.name "HIT-XueBaBa"
         git config user.email "1160300207@stu.hit.edu.cn"
         git add .
