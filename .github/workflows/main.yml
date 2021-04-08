@@ -38,6 +38,7 @@ jobs:
         # cd ./public
         rm -rf ./.git
         mv ./deploy_git/.git .
+        rm -rf ./deploy_git
         git config user.name "HIT-XueBaBa"
         git config user.email "1160300207@stu.hit.edu.cn"
         git add .
