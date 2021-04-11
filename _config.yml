@@ -102,5 +102,9 @@ theme: ocean
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
+# deploy:
+#   type: ''
 deploy:
-  type: ''
+  type: git
+  repo: git@github.com:HIT-XueBaBa/blog
+  branch: main
