@@ -1,41 +1,51 @@
-name: Hexo Deploy
+name: Blog CI/CD
 
 on:
   push:
-    branches:
+    branches: 
       - master
 
+env:
+  TZ: Asia/Shanghai
+
 jobs:
-  build:
-    runs-on: ubuntu-18.04
-    if: github.event.repository.owner.id == github.event.sender.id
+  blog-cicd:
+    name: Hexo blog build & deploy
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
-        with:
-          ref: master
+    - name: Checkout codes
+      uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12'
+    - name: Setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
 
-      - name: Setup Hexo
-        env:
-          ACTION_DEPLOY_KEY: ${{ secrets.HEXO_DEPLOY_KEY }}
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
-          chmod 700 ~/.ssh
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global user.email "1160300207@stu.hit.edu.cn"
-          git config --global user.name "HIT-XueBaBa"
-          npm install hexo-cli -g
-          npm install
+    - name: Cache node modules
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Deploy
-        run: |
-          hexo clean
-          hexo deploy
+    - name: Install dependencies
+      run: |
+        npm install hexo-cli gulp -g
+        npm install
+
+    - name: Generate files
+      run: hexo generate
+
+    - name: Execute gulp task
+      run: gulp
+
+    - name: Deploy blog
+      run: |
+        git clone "https://${{ secrets.GH_REF }}" deploy_git
+        mv ./deploy_git/.git ./public/
+        cd ./public
+        git config user.name "HIT-XueBaBa"
+        git config user.email "1160300207@stu.hit.edu.cn"
+        git add .
+        git commit -m "GitHub Actions Auto Builder at $(date +'%Y-%m-%d %H:%M:%S')"
+        git push --force --quiet "https://${{ secrets.GH_TOKEN }}@${{ secrets.GH_REF }}" master:main
