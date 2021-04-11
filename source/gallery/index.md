@@ -1,5 +1,5 @@
 ---
-title: gallery
+title: Gallery of Alonzo
 date: 2021-04-11 14:21:53
 albums: [
         ["gallery/img/alonzo_avatar.jpg","avatar"],
