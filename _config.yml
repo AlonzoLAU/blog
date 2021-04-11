@@ -106,5 +106,5 @@ theme: ocean
 #   type: ''
 deploy:
   type: git
-  repo: git@github.com:HIT-XueBaBa/blog
+  repo: git@github.com:HIT-XueBaBa/blog.git
   branch: main
