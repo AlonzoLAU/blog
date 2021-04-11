@@ -36,8 +36,8 @@ jobs:
     - name: Generate files
       run: hexo generate
 
-    - name: Execute gulp task
-      run: gulp
+    # - name: Execute gulp task
+    #   run: gulp
 
     - name: Deploy blog
       run: |
